@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import '../styles/Timeline.css';
 
 const formattedTimeline = [
@@ -12,16 +13,31 @@ const Timeline = () => {
     return (
         <section id="timeline" className="timeline-section">
             <div className="container">
-                <h2 className="section-title">Event <span className="gradient-text">Timeline</span></h2>
+                <motion.h2
+                    className="section-title"
+                    initial={{ opacity: 0, y: -20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                >
+                    Event <span className="gradient-text">Timeline</span>
+                </motion.h2>
                 <div className="timeline-container">
                     {formattedTimeline.map((item, index) => (
-                        <div className="timeline-item" key={index}>
+                        <motion.div
+                            className="timeline-item"
+                            key={index}
+                            initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true, amount: 0.5 }}
+                            transition={{ duration: 0.6, delay: index * 0.2 }}
+                        >
                             <div className="timeline-date">{item.date}</div>
                             <div className="timeline-content">
                                 <h3>{item.title}</h3>
                                 <p>{item.desc}</p>
                             </div>
-                        </div>
+                        </motion.div>
                     ))}
                 </div>
             </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import '../styles/Navbar.css';
 
 const Navbar = ({ onRegisterClick }) => {
@@ -26,8 +27,37 @@ const Navbar = ({ onRegisterClick }) => {
         { name: 'Contact', href: '#coordinators' },
     ];
 
+    const navbarVariants = {
+        hidden: { y: -100, opacity: 0 },
+        visible: {
+            y: 0,
+            opacity: 1,
+            transition: {
+                duration: 0.8,
+                ease: "easeOut"
+            }
+        }
+    };
+
+    const linkVariants = {
+        hidden: { opacity: 0, y: -20 },
+        visible: (i) => ({
+            opacity: 1,
+            y: 0,
+            transition: {
+                delay: 0.5 + (i * 0.1),
+                duration: 0.5
+            }
+        })
+    };
+
     return (
-        <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+        <motion.nav
+            className={`navbar ${scrolled ? 'scrolled' : ''}`}
+            initial="hidden"
+            animate="visible"
+            variants={navbarVariants}
+        >
             <div className="container nav-content">
                 <a href="#" className="logo">
                     Code<span className="gradient-text">Storm</span>
@@ -35,14 +65,28 @@ const Navbar = ({ onRegisterClick }) => {
 
                 {/* Desktop Menu */}
                 <ul className="nav-links">
-                    {navLinks.map((link) => (
-                        <li key={link.name}>
+                    {navLinks.map((link, i) => (
+                        <motion.li
+                            key={link.name}
+                            custom={i}
+                            variants={linkVariants}
+                        >
                             <a href={link.href}>{link.name}</a>
-                        </li>
+                        </motion.li>
                     ))}
-                    <li>
-                        <button onClick={onRegisterClick} className="btn btn-primary small-btn">Register</button>
-                    </li>
+                    <motion.li
+                        custom={navLinks.length}
+                        variants={linkVariants}
+                    >
+                        <motion.button
+                            onClick={onRegisterClick}
+                            className="btn btn-primary small-btn"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            Register
+                        </motion.button>
+                    </motion.li>
                 </ul>
 
                 {/* Mobile Toggle */}
@@ -78,7 +122,7 @@ const Navbar = ({ onRegisterClick }) => {
                     </ul>
                 </div>
             </div>
-        </nav>
+        </motion.nav>
     );
 };
 
